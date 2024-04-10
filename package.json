@@ -1,0 +1,52 @@
+{
+  "name": "ferusfax-root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "version": "0.0.0",
+  "description": "command line application that makes your work easier by simplifying your tasks",
+  "main": "index.js",
+  "author": "helberfernandes2000@gmail.com",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.2",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.5.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4",
+    "jest": "^29.7.0",
+    "lerna": "^8.1.2",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  },
+  "scripts": {
+    "install": "lerna run install",
+    "uninstall": "lerna run uninstall",
+    "build": "lerna run build",
+    "dev": "yarn workspace @ferusfax/core dev",
+    "format": "lerna run format",
+    "publish": "lerna run build && lerna publish",
+    "test": "lerna run test"
+  },
+  "keywords": [
+    "cli",
+    "development",
+    "terminal",
+    "command-line",
+    "console",
+    "shell",
+    "TypeScript"
+  ]
+}

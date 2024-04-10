@@ -1,0 +1,49 @@
+{
+  "name": "@ferusfax/core",
+  "version": "0.1.0",
+  "description": "Core da ferusfax CLI",
+  "author": "helberfernandes2000@gmail.com",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/core.js",
+  "typings": "dist/core.d.ts",
+  "bin": {
+    "ferusfax": "dist/core.js"
+  },
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "cli",
+    "development",
+    "terminal",
+    "command-line",
+    "console",
+    "shell",
+    "TypeScript"
+  ],
+  "scripts": {
+    "uninstall": "npm uninstall -g @ferusfax/core",
+    "build": "npx tsc",
+    "dev": "ts-node src/core.ts",
+    "start": "ts-node src/core.ts",
+    "test": "lerna run build --scope @ferusfax/core && jest",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc"
+  },
+  "dependencies": {
+    "@ferusfax/plugin-manager": "^0.1.0",
+    "@ferusfax/types": "^0.1.0",
+    "@inquirer/prompts": "^4.3.1",
+    "cli-table": "^0.3.11",
+    "commander": "^12.0.0",
+    "figlet": "^1.7.0"
+  },
+  "gitHead": "f91a8dc6324f60eed4ee4cb57b3955dfbc5cc174"
+}

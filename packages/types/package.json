@@ -1,0 +1,34 @@
+{
+  "name": "@ferusfax/types",
+  "version": "0.1.0",
+  "description": "Types to ferusfax",
+  "author": "helberfernandes2000@gmail.com",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/core-types.js",
+  "types": "dist/core-types.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "cli",
+    "development",
+    "terminal",
+    "command-line",
+    "console",
+    "shell",
+    "TypeScript"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc"
+  },
+  "gitHead": "f91a8dc6324f60eed4ee4cb57b3955dfbc5cc174"
+}
