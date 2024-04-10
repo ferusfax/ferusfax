@@ -48,5 +48,9 @@
     "console",
     "shell",
     "TypeScript"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ferusfax/ferusfax.git"
+  }
 }
