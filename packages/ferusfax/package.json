@@ -1,5 +1,5 @@
 {
-  "name": "@ferusfax/core",
+  "name": "@ferusfax/ferusfax",
   "version": "0.1.0",
   "description": "Core da ferusfax CLI",
   "author": "helberfernandes2000@gmail.com",
@@ -30,11 +30,11 @@
     "TypeScript"
   ],
   "scripts": {
-    "uninstall": "npm uninstall -g @ferusfax/core",
+    "uninstall": "npm uninstall -g @ferusfax/ferusfax",
     "build": "npx tsc",
     "dev": "ts-node src/core.ts",
     "start": "ts-node src/core.ts",
-    "test": "lerna run build --scope @ferusfax/core && jest",
+    "test": "lerna run build --scope @ferusfax/ferusfax && jest",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc"
   },
   "dependencies": {

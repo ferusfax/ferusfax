@@ -37,7 +37,7 @@
     "install": "lerna run install",
     "uninstall": "lerna run uninstall",
     "build": "lerna run build",
-    "dev": "lerna run build && yarn workspace @ferusfax/core dev",
+    "dev": "lerna run build && yarn workspace @ferusfax/ferusfax dev",
     "format": "lerna run format",
     "publish": "lerna run build && lerna publish",
     "test": "lerna run build && lerna run test"
