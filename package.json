@@ -9,7 +9,9 @@
   "main": "index.js",
   "author": "helberfernandes2000@gmail.com",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@types/uuid": "^9.0.8"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.2",
@@ -35,10 +37,10 @@
     "install": "lerna run install",
     "uninstall": "lerna run uninstall",
     "build": "lerna run build",
-    "dev": "yarn workspace @ferusfax/core dev",
+    "dev": "lerna run build && yarn workspace @ferusfax/core dev",
     "format": "lerna run format",
     "publish": "lerna run build && lerna publish",
-    "test": "lerna run test"
+    "test": "lerna run build && lerna run test"
   },
   "keywords": [
     "cli",

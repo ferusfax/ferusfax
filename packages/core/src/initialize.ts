@@ -1,24 +1,49 @@
 import { Command } from 'commander';
 const figlet = require('figlet');
-import { App } from '@ferusfax/types';
-import { IConfig, readConfigFile, writeConfigFile } from './service';
+import { IConfig } from '@ferusfax/types';
+import { readConfigFile, writeConfigFile } from './services/configService';
 import { writePluginPath } from '@ferusfax/plugin-manager';
+import { Screen } from './screen';
 
 class Initialize {
-  app: App = {
+  config: IConfig = {
+    appName: 'ferusfax',
     title: 'Ferusfax CLI',
-    name: 'ferusfax',
     description:
       'command line application that makes your work easier by simplifying your tasks',
     version: '1.0.0',
+    isInitialized: true,
+    options: [
+      {
+        flags: '-i, --install ',
+        description: 'install plugins',
+      },
+      {
+        flags: '-l, --ls ',
+        description: 'list all plugins',
+      },
+      {
+        flags: '-r, --remove ',
+        description: 'remove plugin',
+      },
+      {
+        flags: '-a, --all ',
+        description: 'list all plugins and run one',
+      },
+    ],
   };
+  private screen: Screen;
+
+  constructor() {
+    this.screen = new Screen();
+  }
 
   int(): Command {
     const program = new Command();
     program
-      .name(this.app.name)
-      .version(this.app.version)
-      .description(this.app.description);
+      .name(this.config.appName)
+      .version(this.config.version)
+      .description(this.config.description);
     program.showHelpAfterError();
     const config: IConfig | undefined = readConfigFile();
 
@@ -35,22 +60,12 @@ class Initialize {
   }
 
   private _initConfigs() {
-    console.log(figlet.textSync(this.app.title));
-    console.log();
-    console.log();
-    console.log();
-    console.log('Creating configs ...');
-
-    const config: IConfig = {
-      appName: 'ferusfax',
-      isInitialized: true,
-    };
-    writeConfigFile(config);
-    writePluginPath();
-
-    console.log();
-    console.log();
-    console.log();
+    console.log(figlet.textSync(this.config.title));
+    this.screen.print(() => {
+      console.log('Creating configs ...');
+      writeConfigFile(this.config);
+      writePluginPath();
+    });
   }
 }
 

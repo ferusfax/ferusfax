@@ -4,12 +4,12 @@ export abstract class Plugin {
 }
 
 export interface IPlugin {
-  identifier: {
+  identifier?: {
     id: string;
     uuid: string;
   };
-  version: string;
-  location: {
+  version?: string;
+  location?: {
     path: string;
   };
   metadata: {
@@ -20,4 +20,27 @@ export interface IPlugin {
     flags: string;
   };
   instance?: any;
+}
+
+/**
+ * PEDDING -> CREATED -> RESOLVED
+ */
+export enum PluginStatus {
+  /**
+   *  Wait for download and create configs
+   */
+  PEDDING,
+  /**
+   * has downloaded and created its config
+   */
+  CREATED,
+  DISABLED,
+  /**
+   * The plugin is created. All the dependencies are created and resolved.
+   * The plugin is ready to be started.
+   */
+  RESOLVED,
+  UNLOADED,
+  FAILED,
+  REMOVED,
 }

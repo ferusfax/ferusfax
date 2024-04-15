@@ -1,10 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-
-export interface IConfig {
-  appName: string;
-  isInitialized: boolean;
-}
+import { IConfig } from '@ferusfax/types';
 
 const PATH_CONFIG = '.config.json';
 const root = path.dirname(path.dirname(__dirname));
@@ -33,6 +29,7 @@ export function readConfigFile(): IConfig | undefined {
     const data = fs.readFileSync(getConfigFilePath(), 'utf8');
 
     const _config: IConfig = JSON.parse(data) as IConfig;
+
     return _config;
   } catch (error) {
     return undefined;
