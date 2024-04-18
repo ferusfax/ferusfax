@@ -1,5 +1,10 @@
 import cliProgress from 'cli-progress';
 
+interface ITableData {
+  head: string[];
+  data: any[][];
+}
+
 export class Screen {
   private progressBar: cliProgress.SingleBar;
 
@@ -28,5 +33,23 @@ export class Screen {
 
   getProgressBar() {
     return this.progressBar;
+  }
+
+  printTable(tableData: ITableData) {
+    var Table = require('cli-table');
+
+    // instantiate
+    var table = new Table({
+      style: { head: ['magenta'] },
+      head: tableData.head,
+      chars: {
+        top: '-',
+        bottom: '-',
+      },
+    });
+
+    table.push(...tableData.data);
+
+    console.log(table.toString());
   }
 }

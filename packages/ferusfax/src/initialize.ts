@@ -3,7 +3,7 @@ const figlet = require('figlet');
 import { IConfig } from '@ferusfax/types';
 import { readConfigFile, writeConfigFile } from './services/configService';
 import { writePluginPath } from '@ferusfax/plugin-manager';
-import { Screen } from './screen';
+import { Screen } from './screen/screen';
 
 class Initialize {
   config: IConfig = {

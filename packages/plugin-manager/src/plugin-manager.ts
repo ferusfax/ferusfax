@@ -15,15 +15,28 @@ interface PackageJson {
   version: string;
 }
 
-class PluginManager {
+export interface IPluginManager<T> {
+  /**
+   * Register and install plugins
+   * @param plugin to install
+   * @returns all plugin configs
+   */
+  registerPlugin(plugin: T): Promise<T>;
+  loadPlugin<P>(name: string): P; //verificar
+  loadPluginByOption(option: string): Promise<T>;
+  listPluginList(): Map<string, T>;
+  remove(plugin: T): Promise<T>;
+  onPluginInstall(listener: any): void;
+  onPluginRemove(listener: any): void;
+}
+
+class PluginManager implements IPluginManager<IPlugin> {
   private pluginList: Map<string, IPlugin>;
-  private commandPluginList: Map<string, string>;
   private program: Command;
   private pluginEvent: PluginEvent;
 
   constructor(program: Command) {
     this.pluginList = new Map();
-    this.commandPluginList = new Map();
     this.program = program;
     this.pluginEvent = pluginEvent;
   }
@@ -64,13 +77,13 @@ class PluginManager {
     }
   }
 
-  async remove(plugin: IPlugin) {
+  async remove(plugin: IPlugin): Promise<IPlugin> {
     if (!this.pluginExists(plugin)) {
-      this.pluginEvent.emitPluginInstall(PluginStatus.FAILED);
+      this.pluginEvent.emitPluginRemove(PluginStatus.FAILED);
       throw new Error(`Plugin ${plugin.metadata.name} does not hists`);
     }
 
-    this.pluginEvent.emitPluginInstall(PluginStatus.PEDDING);
+    this.pluginEvent.emitPluginRemove(PluginStatus.PEDDING);
     let plugins: IPlugin[] = this.loadPluginsFile();
 
     plugin = plugins
@@ -87,7 +100,7 @@ class PluginManager {
       if (err) {
         throw err;
       }
-      this.pluginEvent.emitPluginInstall(PluginStatus.REMOVED);
+      this.pluginEvent.emitPluginRemove(PluginStatus.REMOVED);
     });
 
     return plugin;
@@ -104,12 +117,7 @@ class PluginManager {
     return plugins;
   }
 
-  /**
-   * Register and install plugins
-   * @param plugin to install
-   * @returns all plugin configs
-   */
-  async registerPlugin(plugin: IPlugin) {
+  async registerPlugin(plugin: IPlugin): Promise<IPlugin> {
     if (!plugin.metadata.name || !plugin.metadata.packageName) {
       this.pluginEvent.emitPluginInstall(PluginStatus.FAILED);
       throw new Error('The plugin name and package are required');
@@ -131,18 +139,9 @@ class PluginManager {
     this.program.option(plugin.metadata.flags, plugin.metadata.descrition);
     this.pluginEvent.emitPluginInstall(PluginStatus.RESOLVED);
     return plugin;
-    // try {
-    //   const packageContents = await import(plugin.metadata.packageName);
-    //   this.addPlugin(plugin, packageContents);
-    //   this.program.option(plugin.metadata.flags, plugin.metadata.descrition);
-    //   return plugin;
-    // } catch (error) {
-    //   console.log(`Cannot load plugin ${plugin.metadata.name}`, error);
-    //   process.exit(1);
-    // }
   }
 
-  async downloadPlugin(plugin: IPlugin) {
+  private async downloadPlugin(plugin: IPlugin) {
     const child = spawn(
       `npm v ${plugin.metadata.packageName} dist.tarball | xargs curl | tar -xz && mv package/ ${plugin.metadata.packageName}`,
       {
@@ -166,7 +165,7 @@ class PluginManager {
     return plugin;
   }
 
-  async readPluginPackageJson(plugin: IPlugin) {
+  private async readPluginPackageJson(plugin: IPlugin) {
     try {
       const pluginPackageJson = path.join(
         plugin.location?.path as string,
@@ -188,13 +187,17 @@ class PluginManager {
     this.pluginEvent.onPluginInstall(listener);
   }
 
-  loadPlugin<T>(name: string): T {
+  onPluginRemove(listener = (data: PluginStatus) => {}) {
+    this.pluginEvent.onPluginRemove(listener);
+  }
+
+  loadPlugin<P>(name: string): P {
     const plugin = this.pluginList.get(name);
     if (!plugin) {
       throw new Error(`Cannot find plugin ${name}`);
     }
     // plugin.instance.default.prototype.options = plugin.options;
-    return Object.create(plugin?.instance.default.prototype) as T;
+    return Object.create(plugin?.instance.default.prototype) as P;
   }
 
   /**
@@ -202,7 +205,7 @@ class PluginManager {
    * @param option E o comando de opcao no terminal ex. --kubectl
    * @returns Uma instancia do tipo IPlugin, contendo a instancia do plugin ja imbutida no atributo instance
    */
-  async loadPluginByOption<T>(option: string): Promise<IPlugin> {
+  async loadPluginByOption(option: string): Promise<IPlugin> {
     const plugins: IPlugin[] = this.loadPluginsFile();
 
     const plugin = plugins.find((p) => p.metadata.option === option);
