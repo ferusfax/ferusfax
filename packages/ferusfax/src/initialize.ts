@@ -11,7 +11,7 @@ class Initialize {
     title: 'Ferusfax CLI',
     description:
       'command line application that makes your work easier by simplifying your tasks',
-    version: '1.0.0',
+    version: process.env.npm_package_version as string,
     isInitialized: true,
     options: [
       {

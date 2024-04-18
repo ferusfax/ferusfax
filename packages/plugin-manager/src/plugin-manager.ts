@@ -151,7 +151,6 @@ class PluginManager implements IPluginManager<IPlugin> {
     );
 
     for await (const chunk of child.stdout) {
-      console.log(chunk);
       this.pluginEvent.emitPluginInstall(PluginStatus.PEDDING);
     }
 
