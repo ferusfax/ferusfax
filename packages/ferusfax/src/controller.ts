@@ -39,7 +39,7 @@ class FerusfaxController {
     );
   }
 
-  run() {
+  async run() {
     this.program.parse(process.argv);
     const options = this.program.opts();
     // se nao enviar nada mostra a pagina de ajuda
@@ -58,15 +58,14 @@ class FerusfaxController {
       this.displayPrompt();
     } else {
       try {
-        this.pluginManager
-          .loadPluginByOption(Object.keys(options)[0])
-          .then((plugin) => {
-            plugin.instance.activate(
-              options[plugin.metadata.option] == true
-                ? undefined
-                : options[plugin.metadata.option],
-            );
-          });
+        const plugin = await this.pluginManager.loadPluginByOption(
+          Object.keys(options)[0],
+        );
+        plugin.instance.activate(
+          options[plugin.metadata.option] == true
+            ? undefined
+            : options[plugin.metadata.option],
+        );
       } catch (error) {
         this.screen.print(() => console.log('Plugin não encontrado ...'));
       }

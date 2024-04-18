@@ -1,4 +1,4 @@
-import { IPlugin, PluginStatus } from '@ferusfax/types';
+import { IPlugin, Plugin, PluginStatus } from '@ferusfax/types';
 import { Command } from 'commander';
 import path = require('path');
 import {
@@ -196,7 +196,6 @@ class PluginManager implements IPluginManager<IPlugin> {
     if (!plugin) {
       throw new Error(`Cannot find plugin ${name}`);
     }
-    // plugin.instance.default.prototype.options = plugin.options;
     return Object.create(plugin?.instance.default.prototype) as P;
   }
 
@@ -215,9 +214,9 @@ class PluginManager implements IPluginManager<IPlugin> {
     }
 
     const packageContents = await import(plugin.location?.path as string);
-
-    plugin.instance = packageContents;
-    plugin.instance = Object.create(packageContents);
+    plugin.instance = Object.create(
+      packageContents.default.prototype,
+    ) as Plugin;
     return plugin;
   }
 

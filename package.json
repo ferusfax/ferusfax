@@ -35,6 +35,7 @@
   },
   "scripts": {
     "install": "lerna run install",
+    "install:dev": "lerna run install:dev",
     "uninstall": "lerna run uninstall",
     "build": "lerna run build",
     "dev": "lerna run build && yarn workspace @ferusfax/ferusfax dev",
