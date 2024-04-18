@@ -29,7 +29,7 @@ npm install -g @ferusfax/type
 Extends the abstract class Plugin and implient all methods
 
 ```typescript
-class MyPlugin extends Plugin {
+export default class MyPlugin extends Plugin {
   activate(args: string): string {
     ...
   }
