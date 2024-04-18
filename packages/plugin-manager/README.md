@@ -1,11 +1,9 @@
-# `@ferusfax-cli/plugin-manager`
+# `@ferusfax/plugin-manager`
 
-> TODO: description
+It's part of @ferusfax project
 
 ## Usage
 
-```
-const pluginManager = require('@ferusfax-cli/plugin-manager');
-
-// TODO: DEMONSTRATE API
+```bash
+npm install -g @ferusfax/plugin-manager
 ```
