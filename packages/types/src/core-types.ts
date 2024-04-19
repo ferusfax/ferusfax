@@ -1,2 +1,2 @@
-export { App } from './app.interface';
-export { Plugin, IPlugin } from './plugin';
+export { IConfig } from './app.interface';
+export { Plugin, IPlugin, PluginStatus } from './plugin';

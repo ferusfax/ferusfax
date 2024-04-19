@@ -1,6 +1,6 @@
 {
-  "name": "@ferusfax/core",
-  "version": "0.1.0",
+  "name": "@ferusfax/ferusfax",
+  "version": "0.0.0",
   "description": "Core da ferusfax CLI",
   "author": "helberfernandes2000@gmail.com",
   "homepage": "",
@@ -30,17 +30,20 @@
     "TypeScript"
   ],
   "scripts": {
-    "uninstall": "npm uninstall -g @ferusfax/core",
+    "install:dev": "npm install -g ",
+    "uninstall": "npm uninstall -g @ferusfax/ferusfax",
     "build": "npx tsc",
     "dev": "ts-node src/core.ts",
     "start": "ts-node src/core.ts",
-    "test": "lerna run build --scope @ferusfax/core && jest",
+    "test": "lerna run build --scope @ferusfax/ferusfax && jest",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc"
   },
   "dependencies": {
-    "@ferusfax/plugin-manager": "^0.1.0",
-    "@ferusfax/types": "^0.1.0",
+    "@ferusfax/plugin-manager": "^0.0.0",
+    "@ferusfax/types": "^0.0.0",
     "@inquirer/prompts": "^4.3.1",
+    "@types/cli-progress": "^3.11.5",
+    "cli-progress": "^3.12.0",
     "cli-table": "^0.3.11",
     "commander": "^12.0.0",
     "figlet": "^1.7.0"

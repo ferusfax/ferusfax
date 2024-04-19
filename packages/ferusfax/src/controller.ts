@@ -1,40 +1,46 @@
-import PluginManager from '@ferusfax/plugin-manager';
-import { Plugin } from '@ferusfax/types';
+import PluginManager, { IPluginManager } from '@ferusfax/plugin-manager';
+import { IConfig, IPlugin, Plugin } from '@ferusfax/types';
 import { select } from '@inquirer/prompts';
-import { Command, OptionValues } from 'commander';
-import { listPlugins } from './list-plugins';
+import { Command } from 'commander';
 import initialize from './initialize';
+import { PluginSevice } from './services/pluginsService';
+import { Screen } from './screen/screen';
+import { readConfigFile } from './services/configService';
 
-export interface ITextSelectedChoice {
-  text: string;
-  pluginName: string;
-}
-
-interface Choice {
+export interface Choice {
   name: string;
-  value: string;
+  value: string | IPlugin;
 }
 
 class FerusfaxController {
-  private pluginManager: PluginManager;
+  private pluginManager: IPluginManager<IPlugin>;
   private program: Command;
+  private screen: Screen;
+  private pluginService: PluginSevice;
 
   constructor() {
     this.program = initialize.int();
-    this._init();
+    this.init();
     this.pluginManager = new PluginManager(this.program);
+    this.screen = new Screen();
+    this.pluginService = new PluginSevice(this.pluginManager);
   }
 
   /**
    *  Inicial configs of ferusfax
    */
-  _init() {
-    this.program
-      .option('-l, --ls ', 'list all plugins')
-      .option('-a, --all ', 'list all plugins and run one');
+  private init() {
+    this.buildOptions({ config: readConfigFile() });
   }
 
-  run() {
+  private buildOptions(args: { config: IConfig | undefined }) {
+    args.config?.options.forEach((option) =>
+      this.program.option(option.flags, option.description),
+    );
+  }
+
+  async run() {
+    this.program.parse(process.argv);
     const options = this.program.opts();
     // se nao enviar nada mostra a pagina de ajuda
     if (!process.argv.slice(2).length) {
@@ -43,27 +49,30 @@ class FerusfaxController {
     }
 
     if (options.ls) {
-      listPlugins(this.pluginManager.listPluginList());
+      this.pluginService.listPlugins();
+    } else if (options.install) {
+      this.pluginService.installPlugins();
+    } else if (options.remove) {
+      this.pluginService.removePlugin();
     } else if (options.all) {
       this.displayPrompt();
     } else {
       try {
-        const plugin = this.pluginManager.loadPluginByOption<Plugin>(
+        const plugin = await this.pluginManager.loadPluginByOption(
           Object.keys(options)[0],
         );
-
         plugin.instance.activate(
           options[plugin.metadata.option] == true
             ? undefined
             : options[plugin.metadata.option],
         );
       } catch (error) {
-        console.log('Plugin não encontrado ...');
+        this.screen.print(() => console.log('Plugin não encontrado ...'));
       }
     }
   }
 
-  displayPrompt(): void {
+  private displayPrompt(): void {
     const pluginChoices: Choice[] = [];
     this.pluginManager.listPluginList().forEach((plugin) => {
       pluginChoices.push({
@@ -77,7 +86,9 @@ class FerusfaxController {
       choices: pluginChoices,
     }).then((answer) => {
       // Execute the plugin
-      const textPlugin = this.pluginManager.loadPlugin<Plugin>(answer);
+      const textPlugin = this.pluginManager.loadPlugin<Plugin>(
+        answer as string,
+      );
       console.log(
         `This is the transformed result for ${answer}: ${textPlugin.activate('ls')}`,
       );

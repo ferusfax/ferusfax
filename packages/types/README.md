@@ -1,11 +1,9 @@
-# `@ferusfax-cli/core-types`
+# `@ferusfax/types`
 
-> TODO: description
+It's part of @ferusfax project
 
 ## Usage
 
-```
-const coreTypes = require('@ferusfax-cli/core-types');
-
-// TODO: DEMONSTRATE API
+```bash
+npm install -g @ferusfax/types
 ```

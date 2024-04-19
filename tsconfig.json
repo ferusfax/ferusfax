@@ -5,13 +5,13 @@
     "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    // "emitDecoratorMetadata": true,
+    // "experimentalDecorators": true,
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "ES2022",
     "sourceMap": true,
-    "strict": true,
-    "lib": ["es6"]
+    "strict": true
+    // "lib": ["es6"]
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -6,10 +6,10 @@ import {
   updateConfigFile,
   readConfigFile,
   deleteConfigFile,
-} from '../dist/service';
+} from '../src/service';
 
 test('test if app is undefined', () => {
-  deleteConfigFile();
+  // deleteConfigFile();
   const config = readConfigFile();
   expect(config).toBe(undefined);
 });
