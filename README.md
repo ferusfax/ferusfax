@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ferusfax/ferusfax/assets/8089374/1adec062-c72c-455c-9666-c408974af19d">
+    <img alt="ferusfax" src="https://github.com/ferusfax/ferusfax/assets/8089374/1adec062-c72c-455c-9666-c408974af19d" width="80">
+  </picture>
+</p>
+
 # Ferusfax
 
 Ferusfax is a command line interface that helps you with various activities in your daily life.
