@@ -33,7 +33,7 @@ Create your project add the dependency
 npm install -g @ferusfax/type
 ```
 
-Extends the abstract class Plugin and implient all methods
+Extends the abstract class Plugin and implient all methods, make shure you export as default.
 
 ```typescript
 export default class MyPlugin extends Plugin {
