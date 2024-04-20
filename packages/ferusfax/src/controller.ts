@@ -44,6 +44,7 @@ class FerusfaxController {
     const options = this.program.opts();
     // se nao enviar nada mostra a pagina de ajuda
     if (!process.argv.slice(2).length) {
+      initialize.printLogo();
       this.program.outputHelp();
       return;
     }
