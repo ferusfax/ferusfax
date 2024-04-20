@@ -37,7 +37,16 @@ class Initialize {
   constructor() {
     this.screen = new Screen();
   }
-
+  printLogo() {
+    console.log(
+      figlet.textSync(this.config.title, {
+        horizontalLayout: 'fitted',
+        verticalLayout: 'fitted',
+        width: 80,
+        whitespaceBreak: true,
+      }),
+    );
+  }
   int(): Command {
     const program = new Command();
     program
@@ -60,7 +69,7 @@ class Initialize {
   }
 
   private _initConfigs() {
-    console.log(figlet.textSync(this.config.title));
+    this.printLogo();
     this.screen.print(() => {
       console.log('Creating configs ...');
       writeConfigFile(this.config);
