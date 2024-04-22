@@ -35,7 +35,6 @@
     "@ferusfax/types": "^0.1.0",
     "@types/uuid": "^9.0.8",
     "commander": "^12.0.0",
-    "require-module": "^0.1.0",
     "uuid": "^9.0.1"
   },
   "gitHead": "f91a8dc6324f60eed4ee4cb57b3955dfbc5cc174"
