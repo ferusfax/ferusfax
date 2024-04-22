@@ -6,36 +6,40 @@ import { writePluginPath } from '@ferusfax/plugin-manager';
 import { Screen } from './screen/screen';
 
 class Initialize {
-  config: IConfig = {
-    appName: 'ferusfax',
-    title: 'Ferusfax CLI',
-    description:
-      'command line application that makes your work easier by simplifying your tasks',
-    version: process.env.npm_package_version as string,
-    isInitialized: true,
-    options: [
-      {
-        flags: '-i, --install ',
-        description: 'install plugins',
-      },
-      {
-        flags: '-l, --ls ',
-        description: 'list all plugins',
-      },
-      {
-        flags: '-r, --remove ',
-        description: 'remove plugin',
-      },
-      {
-        flags: '-a, --all ',
-        description: 'list all plugins and run one',
-      },
-    ],
-  };
+  private config: IConfig;
   private screen: Screen;
+  private program: Command;
 
   constructor() {
     this.screen = new Screen();
+    this.program = new Command();
+    var pjson = require('../package.json');
+    this.config = {
+      appName: 'ferusfax',
+      title: 'Ferusfax CLI',
+      description:
+        'command line application that makes your work easier by simplifying your tasks',
+      version: pjson.version,
+      isInitialized: true,
+      options: [
+        {
+          flags: '-i, --install ',
+          description: 'install plugins',
+        },
+        {
+          flags: '-l, --ls ',
+          description: 'list all plugins',
+        },
+        {
+          flags: '-r, --remove ',
+          description: 'remove plugin',
+        },
+        {
+          flags: '-a, --all ',
+          description: 'list all plugins and run one',
+        },
+      ],
+    };
   }
   printLogo() {
     console.log(
@@ -49,10 +53,6 @@ class Initialize {
   }
   int(): Command {
     const program = new Command();
-    program
-      .name(this.config.appName)
-      .version(this.config.version)
-      .description(this.config.description);
     program.showHelpAfterError();
     const config: IConfig | undefined = readConfigFile();
 
@@ -74,6 +74,12 @@ class Initialize {
       console.log('Creating configs ...');
       writeConfigFile(this.config);
       writePluginPath();
+
+      this.config = readConfigFile() as IConfig;
+      this.program
+        .name(this.config.appName)
+        .version(this.config.version)
+        .description(this.config.description);
     });
   }
 }
