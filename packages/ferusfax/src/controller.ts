@@ -3,9 +3,9 @@ import { IConfig, IPlugin, Plugin } from '@ferusfax/types';
 import { select } from '@inquirer/prompts';
 import { Command } from 'commander';
 import initialize from './initialize';
-import { PluginSevice } from './services/pluginsService';
-import { Screen } from './screen/screen';
-import { readConfigFile } from './services/configService';
+import { PluginSevice } from '@services/pluginsService';
+import { Screen } from '@screen/screen';
+import { readConfigFile } from '@services/configService';
 
 export interface Choice {
   name: string;

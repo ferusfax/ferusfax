@@ -32,8 +32,8 @@
   "scripts": {
     "install:dev": "npm install -g ",
     "uninstall": "npm uninstall -g @ferusfax/ferusfax",
-    "build": "npx tsc",
-    "dev": "ts-node src/core.ts",
+    "build": "rimraf dist && tsc -p . && tsc-alias",
+    "dev": "ts-node-dev -r tsconfig-paths/register src/core.ts",
     "start": "ts-node src/core.ts",
     "test": "lerna run build --scope @ferusfax/ferusfax && jest",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc"

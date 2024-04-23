@@ -27,7 +27,7 @@
     "TypeScript"
   ],
   "scripts": {
-    "build": "npx tsc",
+    "build": "rimraf dist && tsc -p . && tsc-alias",
     "test": "lerna run build --scope @ferusfax/plugin-manager && jest",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc"
   },

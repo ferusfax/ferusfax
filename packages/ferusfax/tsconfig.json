@@ -1,9 +1,12 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./dist"
-    },
-    "include": [
-        "./src"
-    ]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "src", // root of your "paths" below. Required if "paths" is defined
+    "paths": {
+      "@services/*": ["services/*"], // enables us to use @components/MyComponent
+      "@screen/*": ["screen/*"]
+    }
+  },
+  "include": ["./src"]
 }

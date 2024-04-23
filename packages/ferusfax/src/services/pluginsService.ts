@@ -1,11 +1,11 @@
 import { IPluginManager } from '@ferusfax/plugin-manager';
 import { IConfig, IPlugin, PluginStatus } from '@ferusfax/types';
 import { input, select } from '@inquirer/prompts';
-import { Screen } from '../screen/screen';
-import { readConfigFile, writeConfigFile } from './configService';
+import { Screen } from '@screen/screen';
+import { readConfigFile, writeConfigFile } from '@services/configService';
 
 import { Choice } from '../controller';
-import { onPluginEvent, print } from '../screen/decorators';
+import { onPluginEvent, print } from '@screen/decorators';
 const screen = new Screen();
 
 export class PluginSevice {
