@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "install:dev": "npm install -g ",
-    "uninstall": "npm uninstall -g @ferusfax/ferusfax",
+    "uninstall": "node dist/uninstall.js && npm uninstall -g @ferusfax/ferusfax",
     "build": "rimraf dist && tsc -p . && tsc-alias",
     "dev": "ts-node-dev -r tsconfig-paths/register src/core.ts",
     "start": "ts-node src/core.ts",

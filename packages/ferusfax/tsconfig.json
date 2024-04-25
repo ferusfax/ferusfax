@@ -5,7 +5,9 @@
     "baseUrl": "src", // root of your "paths" below. Required if "paths" is defined
     "paths": {
       "@services/*": ["services/*"], // enables us to use @components/MyComponent
-      "@screen/*": ["screen/*"]
+      "@screen/*": ["screen/*"],
+      "@repository/*": ["infrastructure/repositorys/*"],
+      "@controller/*": ["controller/*"]
     }
   },
   "include": ["./src"]
