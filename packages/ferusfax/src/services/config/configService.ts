@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { IConfig } from '@ferusfax/types';
-import { ConfigRepository } from '@repository/config';
+import { ConfigRepository } from 'infrastructure/repositories/config';
 import { IConfigService } from '@services/config/interface/config.interface';
 var pjson = require('../../../package.json');
 

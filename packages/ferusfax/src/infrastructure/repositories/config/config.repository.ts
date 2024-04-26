@@ -1,5 +1,5 @@
 import { IConfig } from '@ferusfax/types';
-import { IConfigRepository } from '@repository/config';
+import { IConfigRepository } from 'infrastructure/repositories/config';
 import path from 'path';
 import fs from 'fs';
 
