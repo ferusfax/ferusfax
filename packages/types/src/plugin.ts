@@ -44,3 +44,7 @@ export enum PluginStatus {
   FAILED,
   REMOVED,
 }
+
+export interface PluginData {
+  message: string;
+}

@@ -1,19 +1,24 @@
 import { IPluginManager } from '@ferusfax/plugin-manager';
 import { IConfig, IPlugin, PluginStatus } from '@ferusfax/types';
 import { input, select } from '@inquirer/prompts';
-import { Screen } from '../screen/screen';
-import { readConfigFile, writeConfigFile } from './configService';
-
-import { Choice } from '../controller';
-import { onPluginEvent, print } from '../screen/decorators';
+import { Screen } from '@screen/screen';
+import { IConfigService, ConfigService } from '@services/config';
+import { Choice } from '../../controller/controller';
+import { onPluginEvent, print } from '@screen/decorators';
+import { IPluginService } from '@services/plugin/interface/plugin.interface';
 const screen = new Screen();
 
-export class PluginSevice {
+export class PluginService implements IPluginService {
   @onPluginEvent()
   private accessor pluginManager: IPluginManager<IPlugin>;
+  private configService: IConfigService<IConfig>;
 
-  constructor(pluginManager: IPluginManager<IPlugin>) {
+  constructor(
+    pluginManager: IPluginManager<IPlugin>,
+    configService: IConfigService<IConfig>,
+  ) {
     this.pluginManager = pluginManager;
+    this.configService = configService;
   }
 
   async installPlugins() {
@@ -33,14 +38,14 @@ export class PluginSevice {
   }
 
   private addPluginOptions(plugin: IPlugin) {
-    const config = readConfigFile();
+    const config = this.configService.load();
 
     config?.options.push({
       flags: plugin.metadata.flags,
       description: plugin.metadata.descrition,
     });
 
-    writeConfigFile(config as IConfig);
+    this.configService.save(config as IConfig);
   }
 
   private async buildPluginInstallQuestions(): Promise<IPlugin> {
@@ -82,7 +87,7 @@ export class PluginSevice {
               return 'Incorrect asnwer';
             }
 
-            const config = readConfigFile() as IConfig;
+            const config = this.configService.load() as IConfig;
             let flag = '';
             const isExists = config?.options.find((option) => {
               for (flag of option.flags.split(',')) {
@@ -152,14 +157,14 @@ export class PluginSevice {
     }).then((plugin) => {
       try {
         this.pluginManager.remove(plugin as IPlugin);
-        const config = readConfigFile() as IConfig;
+        const config = this.configService.load() as IConfig;
         const index = config.options.findIndex((o) => {
           const _plugin = plugin as IPlugin;
           return o.flags === _plugin.metadata.flags;
         });
 
         config.options.splice(index, 1);
-        writeConfigFile(config);
+        this.configService.save(config);
       } catch (error: any) {
         console.error(error.message);
       }

@@ -2,10 +2,10 @@ import PluginManager, { IPluginManager } from '@ferusfax/plugin-manager';
 import { IConfig, IPlugin, Plugin } from '@ferusfax/types';
 import { select } from '@inquirer/prompts';
 import { Command } from 'commander';
-import initialize from './initialize';
-import { PluginSevice } from './services/pluginsService';
-import { Screen } from './screen/screen';
-import { readConfigFile } from './services/configService';
+import { IPluginService, PluginService } from '@services/plugin/';
+import { Screen } from '@screen/screen';
+import { IConfigService, ConfigService } from '@services/config';
+import path from 'path';
 
 export interface Choice {
   name: string;
@@ -16,23 +16,46 @@ class FerusfaxController {
   private pluginManager: IPluginManager<IPlugin>;
   private program: Command;
   private screen: Screen;
-  private pluginService: PluginSevice;
+  private pluginService: IPluginService;
+  private configService: IConfigService<IConfig>;
+  private PATH_ROOT = path.dirname(path.dirname(__dirname));
 
   constructor() {
-    this.program = initialize.int();
-    this.init();
-    this.pluginManager = new PluginManager(this.program);
     this.screen = new Screen();
-    this.pluginService = new PluginSevice(this.pluginManager);
+    this.program = this.screen.getCommand();
+    this.pluginManager = new PluginManager(this.program);
+    this.configService = new ConfigService(this.PATH_ROOT);
+    this.pluginService = new PluginService(
+      this.pluginManager,
+      this.configService,
+    );
+    this.init();
   }
 
   /**
    *  Inicial configs of ferusfax
    */
   private init() {
-    this.buildOptions({ config: readConfigFile() });
+    this.configService.create();
+    const config = this.configService.load() as IConfig;
+    if (config) {
+      if (!config.isInitialized) {
+        this._initConfigs(config);
+      } else {
+        this.screen.setConfig(config);
+      }
+    } else {
+      this._initConfigs(config);
+    }
+    this.buildOptions({ config: this.configService.load() });
   }
 
+  private _initConfigs(config: IConfig) {
+    console.log('Creating configs ...');
+    this.pluginManager.init();
+    this.configService.setAsInitialized();
+    this.screen.setConfig(config);
+  }
   private buildOptions(args: { config: IConfig | undefined }) {
     args.config?.options.forEach((option) =>
       this.program.option(option.flags, option.description),
@@ -42,9 +65,8 @@ class FerusfaxController {
   async run() {
     this.program.parse(process.argv);
     const options = this.program.opts();
-    // se nao enviar nada mostra a pagina de ajuda
     if (!process.argv.slice(2).length) {
-      initialize.printLogo();
+      this.screen.printLogo();
       this.program.outputHelp();
       return;
     }
@@ -96,8 +118,8 @@ class FerusfaxController {
     });
   }
 
-  getProgram() {
-    return this.program;
+  remove() {
+    this.configService.deleteConfigFile();
   }
 }
 
