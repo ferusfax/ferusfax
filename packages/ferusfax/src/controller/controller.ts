@@ -1,7 +1,4 @@
-import PluginManager, {
-  IPluginManager,
-  writePluginPath,
-} from '@ferusfax/plugin-manager';
+import PluginManager, { IPluginManager } from '@ferusfax/plugin-manager';
 import { IConfig, IPlugin, Plugin } from '@ferusfax/types';
 import { select } from '@inquirer/prompts';
 import { Command } from 'commander';
@@ -55,7 +52,7 @@ class FerusfaxController {
 
   private _initConfigs(config: IConfig) {
     console.log('Creating configs ...');
-    writePluginPath();
+    this.pluginManager.init();
     this.configService.setAsInitialized();
     this.screen.setConfig(config);
   }
