@@ -79,6 +79,8 @@ class FerusfaxController {
       this.pluginService.removePlugin();
     } else if (options.all) {
       this.displayPrompt();
+    } else if (options.edit) {
+      this.pluginService.editPlugin();
     } else {
       try {
         const plugin = await this.pluginManager.loadPluginByOption(

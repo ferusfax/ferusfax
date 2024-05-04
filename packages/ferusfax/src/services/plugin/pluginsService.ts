@@ -6,6 +6,7 @@ import { IConfigService, ConfigService } from '@services/config';
 import { Choice } from '../../controller/controller';
 import { onPluginEvent, print } from '@screen/decorators';
 import { IPluginService } from '@services/plugin/interface/plugin.interface';
+import { Option } from '@ferusfax/types/dist/app.interface';
 const screen = new Screen();
 
 export class PluginService implements IPluginService {
@@ -20,13 +21,14 @@ export class PluginService implements IPluginService {
     this.pluginManager = pluginManager;
     this.configService = configService;
   }
+  editPlugin(): void {
+    this.buildPluginCoices();
+  }
 
   async installPlugins() {
     const plugin: IPlugin = await this.buildPluginInstallQuestions();
 
-    let regex = new RegExp('--[a-z]*', 'i');
-    let match = regex.exec(plugin.metadata.flags) as RegExpExecArray;
-    plugin.metadata.option = match[0].replace('--', '');
+    plugin.metadata.option = await this.extractOptionOfPlugin(plugin);
 
     this.addPluginOptions(plugin);
 
@@ -37,13 +39,34 @@ export class PluginService implements IPluginService {
     }
   }
 
-  private addPluginOptions(plugin: IPlugin) {
-    const config = this.configService.load();
-
-    config?.options.push({
-      flags: plugin.metadata.flags,
-      description: plugin.metadata.descrition,
+  private extractOptionOfPlugin(plugin: IPlugin): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let regex = new RegExp('--[a-z]*', 'i');
+      let match = regex.exec(plugin.metadata.flags) as RegExpExecArray;
+      resolve(match[0].replace('--', ''));
     });
+  }
+
+  private addPluginOptions(plugin: IPlugin, old?: IPlugin) {
+    const config = this.configService.load() as IConfig;
+
+    if (old) {
+      const options: Option[] = config?.options.map((o) => {
+        return o.flags.trim() === old.metadata.flags.trim()
+          ? {
+              flags: plugin.metadata.flags,
+              description: plugin.metadata.description,
+            }
+          : o;
+      });
+      config?.options.splice(0, config?.options.length);
+      config?.options.push(...options);
+    } else {
+      config?.options.push({
+        flags: plugin.metadata.flags,
+        description: plugin.metadata.description,
+      });
+    }
 
     this.configService.save(config as IConfig);
   }
@@ -69,7 +92,7 @@ export class PluginService implements IPluginService {
             return true;
           },
         }),
-        descrition: await input({
+        description: await input({
           message: 'Description? default empty',
           default: '',
         }),
@@ -169,5 +192,100 @@ export class PluginService implements IPluginService {
         console.error(error.message);
       }
     });
+  }
+
+  private buildPluginCoices(): void {
+    const pluginChoices: Choice[] = [];
+    this.pluginManager.listPluginList().forEach((plugin: IPlugin) => {
+      pluginChoices.push({
+        name: plugin.metadata.name,
+        value: plugin,
+      });
+    });
+
+    const answer = select({
+      message: 'Select one to edit:',
+      choices: pluginChoices,
+    }).then(async (answer) => {
+      const oldPlugin = JSON.parse(JSON.stringify(answer as IPlugin));
+
+      const plugin = await this.buildPluginEditQuestions(answer as IPlugin);
+
+      plugin.metadata.option = await this.extractOptionOfPlugin(plugin);
+
+      this.addPluginOptions(plugin, oldPlugin);
+    });
+  }
+
+  private async buildPluginEditQuestions(plugin: IPlugin): Promise<IPlugin> {
+    plugin.metadata = {
+      name: await input({
+        message: 'Plugin name ?',
+        default: plugin.metadata.name,
+        validate: async (input) => {
+          if (!input) {
+            return 'Incorrect asnwer';
+          }
+          return true;
+        },
+      }),
+      packageName: plugin.metadata.packageName,
+      description: await input({
+        message: 'Description? default empty',
+        default: plugin.metadata.description,
+      }),
+      flags: await input({
+        message: 'Plugin flags?: ex.: -l, --list: ',
+        default: plugin.metadata.flags,
+        validate: async (input) => {
+          if (!input) {
+            return 'Incorrect asnwer';
+          }
+          let regex = new RegExp(
+            '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
+            'i',
+          );
+          if (!regex.test(input)) {
+            return 'Incorrect asnwer';
+          }
+
+          const config = this.configService.load() as IConfig;
+          let flag = '';
+          const isExists = config?.options.find((option) => {
+            for (flag of option.flags.split(',')) {
+              for (const _flag of input.split(',')) {
+                if (
+                  flag.replace('<value>', '').replace('[value]', '').trim() ===
+                  _flag.replace('<value>', '').replace('[value]', '').trim()
+                ) {
+                  for (const flagOld of plugin.metadata.flags.split(',')) {
+                    if (
+                      flagOld
+                        .replace('<value>', '')
+                        .replace('[value]', '')
+                        .trim() ===
+                      _flag.replace('<value>', '').replace('[value]', '').trim()
+                    ) {
+                      return false;
+                    }
+                  }
+
+                  return true;
+                }
+              }
+            }
+            return false;
+          });
+
+          if (isExists) {
+            return `The flag (${flag}) already exists`;
+          }
+          return true;
+        },
+      }),
+      option: plugin.metadata.option,
+    };
+
+    return plugin;
   }
 }
