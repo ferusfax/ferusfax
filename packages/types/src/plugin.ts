@@ -15,7 +15,7 @@ export interface IPlugin {
   metadata: {
     name: string;
     packageName: string;
-    descrition: string;
+    description: string;
     option: string;
     flags: string;
   };

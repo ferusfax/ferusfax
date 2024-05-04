@@ -31,7 +31,7 @@ class PluginManager implements IPluginManager<IPlugin> {
       this.pluginEvent.emitPluginInstall(PluginStatus.PEDDING);
       plugin = await this.pluginService.registerPlugin(plugin);
 
-      this.program.option(plugin.metadata.flags, plugin.metadata.descrition);
+      this.program.option(plugin.metadata.flags, plugin.metadata.description);
       this.pluginEvent.emitPluginInstall(PluginStatus.RESOLVED);
     } catch (error: any) {
       this.pluginEvent.emitPluginInstall(PluginStatus.FAILED, error.message);

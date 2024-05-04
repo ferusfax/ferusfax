@@ -34,6 +34,10 @@ export class ConfigService implements IConfigService<IConfig> {
           flags: '-a, --all ',
           description: 'list all plugins and run one',
         },
+        {
+          flags: '-e, --edit ',
+          description: 'edit a plugin',
+        },
       ],
     };
   }
