@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/plugin-manager@0.1.0...@ferusfax/plugin-manager@0.2.0) (2024-05-04)
+
+### Bug Fixes
+
+- fix initial configs ([a07afd8](https://github.com/ferusfax/ferusfax/commit/a07afd881290751d3fca72cc966e26a06128f675))
+
+### Features
+
+- edit plugin ([9021da0](https://github.com/ferusfax/ferusfax/commit/9021da06b9d387a707c3a6d21b99ae5df9e0000a))
+
 # 0.1.0 (2024-04-21)
 
 ### Bug Fixes

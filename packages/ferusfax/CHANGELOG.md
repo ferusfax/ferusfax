@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/ferusfax@0.1.0...@ferusfax/ferusfax@0.2.0) (2024-05-04)
+
+### Bug Fixes
+
+- call beetewen layers ([2d6a416](https://github.com/ferusfax/ferusfax/commit/2d6a4167cc46b42da0cae0187b4bfee5cbca9a5d))
+- fix initial configs ([a07afd8](https://github.com/ferusfax/ferusfax/commit/a07afd881290751d3fca72cc966e26a06128f675))
+
+### Features
+
+- edit plugin ([9021da0](https://github.com/ferusfax/ferusfax/commit/9021da06b9d387a707c3a6d21b99ae5df9e0000a))
+
 # 0.1.0 (2024-04-21)
 
 ### Bug Fixes
