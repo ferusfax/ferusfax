@@ -65,6 +65,10 @@ export class Screen {
   printTable(tableData: ITableData) {
     var Table = require('cli-table');
 
+    if (tableData.data.length == 0) {
+      console.log("There aren't any plugins installed");
+      return;
+    }
     // instantiate
     var table = new Table({
       style: { head: ['magenta'] },
