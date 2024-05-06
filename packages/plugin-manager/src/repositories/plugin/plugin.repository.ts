@@ -10,8 +10,7 @@ export class PluginRepository implements IPluginRepository {
   private PLUGIN_FOLDER = 'plugins';
   getPluginFilePath(): string {
     return path.join(
-      os.homedir(),
-      this.ROOT_FOLDER,
+      this.getRootFolderPath(),
       this.PLUGIN_FOLDER,
       'plugins.json',
     );
@@ -23,8 +22,6 @@ export class PluginRepository implements IPluginRepository {
     return path.join(os.homedir(), this.ROOT_FOLDER);
   }
   createPluginFolder(): void {
-    const pluginFilePath = this.getPluginFilePath();
-
     if (!fs.existsSync(this.getPluginFolderPath())) {
       fs.mkdirSync(this.getPluginFolderPath(), { recursive: true });
     }
