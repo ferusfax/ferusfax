@@ -1,17 +1,17 @@
+import os from 'os';
+import fs from 'fs';
 import { IConfig } from '@ferusfax/types';
 import { IConfigRepository } from 'infrastructure/repositories/config';
 import path from 'path';
-import fs from 'fs';
 
 export class ConfigRepository implements IConfigRepository<IConfig> {
+  private ROOT_FOLDER = '.ferusfax';
   private PATH_CONFIG = '.config.json';
-  private pathRoot: string;
 
-  constructor(pathRoot: string) {
-    this.pathRoot = pathRoot;
-  }
+  constructor() {}
 
   save(config: IConfig) {
+    this.createProjectFolder();
     fs.writeFileSync(this.getConfigFilePath(), JSON.stringify(config), 'utf8');
   }
 
@@ -27,9 +27,18 @@ export class ConfigRepository implements IConfigRepository<IConfig> {
     }
   }
   getConfigFilePath(): fs.PathLike {
-    return path.join(this.pathRoot, this.PATH_CONFIG);
+    return path.join(this.getRootFolderPath(), this.PATH_CONFIG);
+  }
+
+  private createProjectFolder() {
+    if (!fs.existsSync(this.getRootFolderPath())) {
+      fs.mkdirSync(this.getRootFolderPath(), { recursive: true });
+    }
   }
   deleteConfigFile() {
     fs.unlinkSync(this.getConfigFilePath());
+  }
+  private getRootFolderPath(): string {
+    return path.join(os.homedir(), this.ROOT_FOLDER);
   }
 }

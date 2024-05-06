@@ -18,13 +18,12 @@ class FerusfaxController {
   private screen: Screen;
   private pluginService: IPluginService;
   private configService: IConfigService<IConfig>;
-  private PATH_ROOT = path.dirname(path.dirname(__dirname));
 
   constructor() {
     this.screen = new Screen();
     this.program = this.screen.getCommand();
     this.pluginManager = new PluginManager(this.program);
-    this.configService = new ConfigService(this.PATH_ROOT);
+    this.configService = new ConfigService();
     this.pluginService = new PluginService(
       this.pluginManager,
       this.configService,
