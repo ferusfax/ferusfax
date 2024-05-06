@@ -8,8 +8,8 @@ export class ConfigService implements IConfigService<IConfig> {
   private config: IConfig;
   private configRepository: ConfigRepository;
 
-  constructor(pathRoot: string) {
-    this.configRepository = new ConfigRepository(pathRoot);
+  constructor() {
+    this.configRepository = new ConfigRepository();
     this.config = {
       appName: 'ferusfax',
       title: 'Ferusfax CLI',
