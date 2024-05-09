@@ -65,7 +65,9 @@ export class PluginRepository implements IPluginRepository {
 
   loadPluginsData(): IPlugin[] {
     try {
-      return this.loadPluginsConfigFile();
+      return this.loadPluginsConfigFile().sort((p1, p2) =>
+        p1.metadata.name < p2.metadata.name ? -1 : 1,
+      );
     } catch (error) {
       return [];
     }

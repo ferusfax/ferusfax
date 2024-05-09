@@ -74,8 +74,12 @@ class PluginManager implements IPluginManager<IPlugin> {
     return this.pluginService.getPluginByOption(option);
   }
 
-  listPluginList(): Map<string, IPlugin> {
+  getPluginsAsMap(): Map<string, IPlugin> {
     return this.pluginService.getAllAsMap();
+  }
+
+  getPluginsAslist(): IPlugin[] {
+    return this.pluginService.getAllAsList();
   }
 }
 

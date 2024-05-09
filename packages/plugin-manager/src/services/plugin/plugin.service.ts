@@ -64,9 +64,7 @@ export class PluginService implements IPLuginService {
   getAllAsMap(): Map<string, IPlugin> {
     const plugins: IPlugin[] = this.pluginRepository.loadPluginsData();
     const map = new Map();
-    plugins
-      .sort((p1, p2) => (p1.metadata.name < p2.metadata.name ? -1 : 1))
-      .forEach((p) => map.set(p.identifier?.id as string, p));
+    plugins.forEach((p) => map.set(p.identifier?.id as string, p));
     return map;
   }
 
@@ -119,5 +117,9 @@ export class PluginService implements IPLuginService {
     } catch (error) {
       return false;
     }
+  }
+
+  getAllAsList(): IPlugin[] {
+    return this.pluginRepository.loadPluginsData();
   }
 }

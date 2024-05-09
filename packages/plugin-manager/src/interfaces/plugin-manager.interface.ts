@@ -7,7 +7,8 @@ export interface IPluginManager<T> {
   registerPlugin(plugin: T): Promise<T>;
   loadPlugin<P>(name: string): P; //verificar
   loadPluginByOption(option: string): Promise<T>;
-  listPluginList(): Map<string, T>;
+  getPluginsAsMap(): Map<string, T>;
+  getPluginsAslist(): T[];
   remove(plugin: T): Promise<T>;
   onPluginInstall(listener: any): void;
   onPluginRemove(listener: any): void;

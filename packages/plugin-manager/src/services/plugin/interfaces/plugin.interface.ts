@@ -6,4 +6,5 @@ export interface IPLuginService {
   remove(plugin: IPlugin): Promise<IPlugin>;
   getPluginByOption(option: string): Promise<IPlugin>;
   getAllAsMap(): Map<string, IPlugin>;
+  getAllAsList(): IPlugin[];
 }

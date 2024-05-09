@@ -30,8 +30,6 @@ export class PluginService implements IPluginService {
 
     plugin.metadata.option = await this.extractOptionOfPlugin(plugin);
 
-    this.addPluginOptions(plugin);
-
     try {
       this.pluginManager.registerPlugin(plugin);
     } catch (error: any) {
@@ -77,8 +75,10 @@ export class PluginService implements IPluginService {
         name: await input({
           message: 'Plugin name ?',
           validate: async (input) => {
-            if (!input) {
-              return 'Incorrect asnwer';
+            try {
+              this.isInputValid(input);
+            } catch (error: any) {
+              return error.message;
             }
             return true;
           },
@@ -86,8 +86,10 @@ export class PluginService implements IPluginService {
         packageName: await input({
           message: 'PackageName name?',
           validate: async (input) => {
-            if (!input) {
-              return 'Incorrect asnwer';
+            try {
+              this.isInputValid(input);
+            } catch (error: any) {
+              return error.message;
             }
             return true;
           },
@@ -99,38 +101,20 @@ export class PluginService implements IPluginService {
         flags: await input({
           message: 'Plugin flags?: ex.: -l, --list: ',
           validate: async (input) => {
-            if (!input) {
-              return 'Incorrect asnwer';
-            }
-            let regex = new RegExp(
-              '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
-              'i',
-            );
-            if (!regex.test(input)) {
-              return 'Incorrect asnwer';
-            }
+            try {
+              this.isInputValid(input);
 
-            const config = this.configService.load() as IConfig;
-            let flag = '';
-            const isExists = config?.options.find((option) => {
-              for (flag of option.flags.split(',')) {
-                for (const _flag of input.split(',')) {
-                  if (
-                    flag
-                      .replace('<value>', '')
-                      .replace('[value]', '')
-                      .trim() ===
-                    _flag.replace('<value>', '').replace('[value]', '').trim()
-                  ) {
-                    return true;
-                  }
-                }
+              let regex = new RegExp(
+                '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
+                'i',
+              );
+              if (!regex.test(input)) {
+                return 'Incorrect asnwer';
               }
-              return false;
-            });
 
-            if (isExists) {
-              return `The flag (${flag}) already exists`;
+              this.isOptionExists(input);
+            } catch (error: any) {
+              return error.message;
             }
             return true;
           },
@@ -140,9 +124,58 @@ export class PluginService implements IPluginService {
     };
   }
 
+  private isInputValid(input: string) {
+    if (!input) {
+      throw new Error('Incorrect asnwer');
+    }
+  }
+
+  private isOptionExists(input: string) {
+    this.isOptionDefaultExists(input);
+    this.isOptionPluginExists(input);
+  }
+
+  private isOptionDefaultExists(input: string) {
+    const config = this.configService.load() as IConfig;
+
+    const isExists = config?.options.find((option) => {
+      this.isFlagExists(option, input);
+      return false;
+    });
+  }
+
+  private isOptionPluginExists(input: string) {
+    const options = this.pluginManager
+      .getPluginsAslist()
+      .map((p) => p.metadata);
+
+    options.find((option) => {
+      this.isFlagExists(option, input);
+      return false;
+    });
+  }
+
+  private isFlagExists(
+    option: {
+      flags: string;
+    },
+    input: string,
+  ) {
+    for (let flag of option.flags.split(',')) {
+      for (const _flag of input.split(',')) {
+        if (
+          flag.replace('<value>', '').replace('[value]', '').trim() ===
+          _flag.replace('<value>', '').replace('[value]', '').trim()
+        ) {
+          throw new Error(`The flag (${flag}) already exists`);
+        }
+      }
+    }
+  }
+
   @print
   listPlugins() {
-    const plugins = this.pluginManager.listPluginList();
+    const plugins = this.pluginManager.getPluginsAsMap();
     let data: string[][] = [];
     plugins.forEach((plugin) => {
       data.push([
@@ -160,7 +193,7 @@ export class PluginService implements IPluginService {
 
   async removePlugin() {
     const pluginChoices: Choice[] = [];
-    this.pluginManager.listPluginList().forEach((plugin) => {
+    this.pluginManager.getPluginsAsMap().forEach((plugin) => {
       pluginChoices.push({
         name: plugin.metadata.name,
         value: plugin as IPlugin,
@@ -196,7 +229,7 @@ export class PluginService implements IPluginService {
 
   private buildPluginCoices(): void {
     const pluginChoices: Choice[] = [];
-    this.pluginManager.listPluginList().forEach((plugin: IPlugin) => {
+    this.pluginManager.getPluginsAsMap().forEach((plugin: IPlugin) => {
       pluginChoices.push({
         name: plugin.metadata.name,
         value: plugin,
