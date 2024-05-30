@@ -6,7 +6,7 @@
     "paths": {
       "@services/*": ["services/*"], // enables us to use @components/MyComponent
       "@screen/*": ["screen/*"],
-      "@repository/*": ["infrastructure/repositories/*"],
+      "@repository/*": ["repositories/*"],
       "@controller/*": ["controller/*"]
     }
   },

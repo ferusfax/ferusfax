@@ -76,7 +76,7 @@ export class PluginService implements IPluginService {
           message: 'Plugin name ?',
           validate: async (input) => {
             try {
-              this.isInputValid(input);
+              this.isInputEmpty(input);
             } catch (error: any) {
               return error.message;
             }
@@ -87,7 +87,7 @@ export class PluginService implements IPluginService {
           message: 'PackageName name?',
           validate: async (input) => {
             try {
-              this.isInputValid(input);
+              this.isInputEmpty(input);
             } catch (error: any) {
               return error.message;
             }
@@ -102,16 +102,8 @@ export class PluginService implements IPluginService {
           message: 'Plugin flags?: ex.: -l, --list: ',
           validate: async (input) => {
             try {
+              this.isInputEmpty(input);
               this.isInputValid(input);
-
-              let regex = new RegExp(
-                '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
-                'i',
-              );
-              if (!regex.test(input)) {
-                return 'Incorrect asnwer';
-              }
-
               this.isOptionExists(input);
             } catch (error: any) {
               return error.message;
@@ -124,9 +116,16 @@ export class PluginService implements IPluginService {
     };
   }
 
-  private isInputValid(input: string) {
+  private isInputEmpty(input: string) {
     if (!input) {
       throw new Error('Incorrect asnwer');
+    }
+  }
+
+  private isInputValid(input: string) {
+    let regex = new RegExp('(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)', 'i');
+    if (!regex.test(input)) {
+      return 'Incorrect asnwer';
     }
   }
 
@@ -213,14 +212,14 @@ export class PluginService implements IPluginService {
     }).then((plugin) => {
       try {
         this.pluginManager.remove(plugin as IPlugin);
-        const config = this.configService.load() as IConfig;
-        const index = config.options.findIndex((o) => {
-          const _plugin = plugin as IPlugin;
-          return o.flags === _plugin.metadata.flags;
-        });
+        // const config = this.configService.load() as IConfig;
+        // const index = config.options.findIndex((o) => {
+        //   const _plugin = plugin as IPlugin;
+        //   return o.flags === _plugin.metadata.flags;
+        // });
 
-        config.options.splice(index, 1);
-        this.configService.save(config);
+        // config.options.splice(index, 1);
+        // this.configService.save(config);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -271,9 +270,7 @@ export class PluginService implements IPluginService {
         message: 'Plugin flags?: ex.: -l, --list: ',
         default: plugin.metadata.flags,
         validate: async (input) => {
-          if (!input) {
-            return 'Incorrect asnwer';
-          }
+          this.isInputEmpty(input);
           let regex = new RegExp(
             '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
             'i',

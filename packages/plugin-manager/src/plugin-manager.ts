@@ -43,7 +43,8 @@ class PluginManager implements IPluginManager<IPlugin> {
     try {
       plugin = await this.pluginService.remove(plugin);
     } catch (error: any) {
-      this.pluginEvent.emitPluginInstall(PluginStatus.FAILED, error.message);
+      this.pluginEvent.emitPluginRemove(PluginStatus.FAILED, error.message);
+      throw new Error(error);
     }
 
     return plugin;

@@ -30,8 +30,8 @@ export class PluginService implements IPLuginService {
   }
 
   async remove(plugin: IPlugin): Promise<IPlugin> {
-    if (this.isPluginExists(plugin)) {
-      throw new Error(`Cannot add existing plugin ${plugin.metadata.name}`);
+    if (!this.isPluginExists(plugin)) {
+      throw new Error(`Plugin ${plugin.metadata.name} not found`);
     }
 
     this.pluginEvent.emitPluginRemove(PluginStatus.PEDDING);
