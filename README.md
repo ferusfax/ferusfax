@@ -44,7 +44,7 @@ npm install --save-dev typescript
 Create and configure the tsconfig.json file, add the dependency
 
 ```bash
-npm install -g @ferusfax/type
+npm install --save @ferusfax/types
 ```
 
 Extends the abstract class Plugin and implient all methods, make shure you export as default.
