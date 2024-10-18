@@ -53,6 +53,8 @@ ferusfax -i
 
 Follow the instructions and finally run ferusfax with the arguments given during installation
 
+> For local plugins you must specify this option at installation time, in this case the package name must be the path to the project.
+
 If you have any questions, run the help command
 
 ```bash
