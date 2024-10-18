@@ -35,6 +35,7 @@ class PluginManager implements IPluginManager<IPlugin> {
       this.pluginEvent.emitPluginInstall(PluginStatus.RESOLVED);
     } catch (error: any) {
       this.pluginEvent.emitPluginInstall(PluginStatus.FAILED, error.message);
+      throw new Error(error.message);
     }
     return plugin;
   }
@@ -43,10 +44,15 @@ class PluginManager implements IPluginManager<IPlugin> {
     try {
       plugin = await this.pluginService.remove(plugin);
     } catch (error: any) {
-      this.pluginEvent.emitPluginInstall(PluginStatus.FAILED, error.message);
+      this.pluginEvent.emitPluginRemove(PluginStatus.FAILED, error.message);
+      throw new Error(error);
     }
 
     return plugin;
+  }
+
+  edit(plugin: IPlugin): void {
+    this.pluginService.edit(plugin);
   }
 
   onPluginInstall(listener = (data: PluginStatus) => {}) {
@@ -62,7 +68,8 @@ class PluginManager implements IPluginManager<IPlugin> {
     if (!plugin) {
       throw new Error(`Cannot find plugin ${name}`);
     }
-    return Object.create(plugin?.instance.default.prototype) as P;
+    // return Object.create(plugin.instance.default.prototype) as P;
+    return {} as P;
   }
 
   /**
@@ -74,8 +81,12 @@ class PluginManager implements IPluginManager<IPlugin> {
     return this.pluginService.getPluginByOption(option);
   }
 
-  listPluginList(): Map<string, IPlugin> {
+  getPluginsAsMap(): Map<string, IPlugin> {
     return this.pluginService.getAllAsMap();
+  }
+
+  getPluginsAslist(): IPlugin[] {
+    return this.pluginService.getAllAsList();
   }
 }
 

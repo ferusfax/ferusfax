@@ -30,8 +30,6 @@ export class PluginService implements IPluginService {
 
     plugin.metadata.option = await this.extractOptionOfPlugin(plugin);
 
-    this.addPluginOptions(plugin);
-
     try {
       this.pluginManager.registerPlugin(plugin);
     } catch (error: any) {
@@ -47,28 +45,9 @@ export class PluginService implements IPluginService {
     });
   }
 
-  private addPluginOptions(plugin: IPlugin, old?: IPlugin) {
+  private edit(plugin: IPlugin) {
     const config = this.configService.load() as IConfig;
-
-    if (old) {
-      const options: Option[] = config?.options.map((o) => {
-        return o.flags.trim() === old.metadata.flags.trim()
-          ? {
-              flags: plugin.metadata.flags,
-              description: plugin.metadata.description,
-            }
-          : o;
-      });
-      config?.options.splice(0, config?.options.length);
-      config?.options.push(...options);
-    } else {
-      config?.options.push({
-        flags: plugin.metadata.flags,
-        description: plugin.metadata.description,
-      });
-    }
-
-    this.configService.save(config as IConfig);
+    this.pluginManager.edit(plugin);
   }
 
   private async buildPluginInstallQuestions(): Promise<IPlugin> {
@@ -77,8 +56,10 @@ export class PluginService implements IPluginService {
         name: await input({
           message: 'Plugin name ?',
           validate: async (input) => {
-            if (!input) {
-              return 'Incorrect asnwer';
+            try {
+              this.isInputEmpty(input);
+            } catch (error: any) {
+              return error.message;
             }
             return true;
           },
@@ -86,8 +67,10 @@ export class PluginService implements IPluginService {
         packageName: await input({
           message: 'PackageName name?',
           validate: async (input) => {
-            if (!input) {
-              return 'Incorrect asnwer';
+            try {
+              this.isInputEmpty(input);
+            } catch (error: any) {
+              return error.message;
             }
             return true;
           },
@@ -99,38 +82,12 @@ export class PluginService implements IPluginService {
         flags: await input({
           message: 'Plugin flags?: ex.: -l, --list: ',
           validate: async (input) => {
-            if (!input) {
-              return 'Incorrect asnwer';
-            }
-            let regex = new RegExp(
-              '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
-              'i',
-            );
-            if (!regex.test(input)) {
-              return 'Incorrect asnwer';
-            }
-
-            const config = this.configService.load() as IConfig;
-            let flag = '';
-            const isExists = config?.options.find((option) => {
-              for (flag of option.flags.split(',')) {
-                for (const _flag of input.split(',')) {
-                  if (
-                    flag
-                      .replace('<value>', '')
-                      .replace('[value]', '')
-                      .trim() ===
-                    _flag.replace('<value>', '').replace('[value]', '').trim()
-                  ) {
-                    return true;
-                  }
-                }
-              }
-              return false;
-            });
-
-            if (isExists) {
-              return `The flag (${flag}) already exists`;
+            try {
+              this.isInputEmpty(input);
+              this.isInputValid(input);
+              this.isOptionExists(input);
+            } catch (error: any) {
+              return error.message;
             }
             return true;
           },
@@ -140,9 +97,65 @@ export class PluginService implements IPluginService {
     };
   }
 
+  private isInputEmpty(input: string) {
+    if (!input) {
+      throw new Error('Incorrect asnwer');
+    }
+  }
+
+  private isInputValid(input: string) {
+    let regex = new RegExp('(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)', 'i');
+    if (!regex.test(input)) {
+      return 'Incorrect asnwer';
+    }
+  }
+
+  private isOptionExists(input: string) {
+    this.isOptionDefaultExists(input);
+    this.isOptionPluginExists(input);
+  }
+
+  private isOptionDefaultExists(input: string) {
+    const config = this.configService.load() as IConfig;
+
+    const isExists = config?.options.find((option) => {
+      this.isFlagExists(option, input);
+      return false;
+    });
+  }
+
+  private isOptionPluginExists(input: string) {
+    const options = this.pluginManager
+      .getPluginsAslist()
+      .map((p) => p.metadata);
+
+    options.find((option) => {
+      this.isFlagExists(option, input);
+      return false;
+    });
+  }
+
+  private isFlagExists(
+    option: {
+      flags: string;
+    },
+    input: string,
+  ) {
+    for (let flag of option.flags.split(',')) {
+      for (const _flag of input.split(',')) {
+        if (
+          flag.replace('<value>', '').replace('[value]', '').trim() ===
+          _flag.replace('<value>', '').replace('[value]', '').trim()
+        ) {
+          throw new Error(`The flag (${flag}) already exists`);
+        }
+      }
+    }
+  }
+
   @print
   listPlugins() {
-    const plugins = this.pluginManager.listPluginList();
+    const plugins = this.pluginManager.getPluginsAsMap();
     let data: string[][] = [];
     plugins.forEach((plugin) => {
       data.push([
@@ -160,7 +173,7 @@ export class PluginService implements IPluginService {
 
   async removePlugin() {
     const pluginChoices: Choice[] = [];
-    this.pluginManager.listPluginList().forEach((plugin) => {
+    this.pluginManager.getPluginsAsMap().forEach((plugin) => {
       pluginChoices.push({
         name: plugin.metadata.name,
         value: plugin as IPlugin,
@@ -180,14 +193,14 @@ export class PluginService implements IPluginService {
     }).then((plugin) => {
       try {
         this.pluginManager.remove(plugin as IPlugin);
-        const config = this.configService.load() as IConfig;
-        const index = config.options.findIndex((o) => {
-          const _plugin = plugin as IPlugin;
-          return o.flags === _plugin.metadata.flags;
-        });
+        // const config = this.configService.load() as IConfig;
+        // const index = config.options.findIndex((o) => {
+        //   const _plugin = plugin as IPlugin;
+        //   return o.flags === _plugin.metadata.flags;
+        // });
 
-        config.options.splice(index, 1);
-        this.configService.save(config);
+        // config.options.splice(index, 1);
+        // this.configService.save(config);
       } catch (error: any) {
         console.error(error.message);
       }
@@ -196,7 +209,7 @@ export class PluginService implements IPluginService {
 
   private buildPluginCoices(): void {
     const pluginChoices: Choice[] = [];
-    this.pluginManager.listPluginList().forEach((plugin: IPlugin) => {
+    this.pluginManager.getPluginsAsMap().forEach((plugin: IPlugin) => {
       pluginChoices.push({
         name: plugin.metadata.name,
         value: plugin,
@@ -213,7 +226,7 @@ export class PluginService implements IPluginService {
 
       plugin.metadata.option = await this.extractOptionOfPlugin(plugin);
 
-      this.addPluginOptions(plugin, oldPlugin);
+      this.edit(plugin);
     });
   }
 
@@ -238,9 +251,7 @@ export class PluginService implements IPluginService {
         message: 'Plugin flags?: ex.: -l, --list: ',
         default: plugin.metadata.flags,
         validate: async (input) => {
-          if (!input) {
-            return 'Incorrect asnwer';
-          }
+          this.isInputEmpty(input);
           let regex = new RegExp(
             '(-[a-z]{1}), (--[a-z]*) ?([value <>\\[\\]]*)',
             'i',

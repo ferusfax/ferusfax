@@ -56,6 +56,19 @@ class FerusfaxController {
     this.screen.setConfig(config);
   }
   private buildOptions(args: { config: IConfig | undefined }) {
+    this.buildDefaultOptions(args);
+    this.buildPluginsOptions();
+  }
+
+  private buildPluginsOptions() {
+    this.pluginManager
+      .getPluginsAsMap()
+      .forEach((plugin) =>
+        this.program.option(plugin.metadata.flags, plugin.metadata.description),
+      );
+  }
+
+  private buildDefaultOptions(args: { config: IConfig | undefined }) {
     args.config?.options.forEach((option) =>
       this.program.option(option.flags, option.description),
     );
@@ -85,7 +98,7 @@ class FerusfaxController {
         const plugin = await this.pluginManager.loadPluginByOption(
           Object.keys(options)[0],
         );
-        plugin.instance.activate(
+        plugin.instance?.activate(
           options[plugin.metadata.option] == true
             ? undefined
             : options[plugin.metadata.option],
@@ -98,7 +111,7 @@ class FerusfaxController {
 
   private displayPrompt(): void {
     const pluginChoices: Choice[] = [];
-    this.pluginManager.listPluginList().forEach((plugin) => {
+    this.pluginManager.getPluginsAsMap().forEach((plugin) => {
       pluginChoices.push({
         name: plugin.metadata.name,
         value: plugin.metadata.name,

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { IConfig } from '@ferusfax/types';
-import { ConfigRepository } from 'infrastructure/repositories/config';
+import { ConfigRepository } from '@repository/config';
 import { IConfigService } from '@services/config/interface/config.interface';
 var pjson = require('../../../package.json');
 
@@ -56,6 +56,7 @@ export class ConfigService implements IConfigService<IConfig> {
     this.config.isInitialized = true;
     this.configRepository.save(this.config);
   }
+
   load(): IConfig | undefined {
     try {
       return this.configRepository.load();
@@ -63,9 +64,11 @@ export class ConfigService implements IConfigService<IConfig> {
       return undefined;
     }
   }
+
   getConfigFilePath(): fs.PathLike {
     return this.configRepository.getConfigFilePath();
   }
+
   deleteConfigFile(): void {
     this.configRepository.deleteConfigFile();
   }

@@ -1,7 +1,7 @@
 import os from 'os';
 import fs from 'fs';
 import { IConfig } from '@ferusfax/types';
-import { IConfigRepository } from 'infrastructure/repositories/config';
+import { IConfigRepository } from 'repositories/config';
 import path from 'path';
 
 export class ConfigRepository implements IConfigRepository<IConfig> {

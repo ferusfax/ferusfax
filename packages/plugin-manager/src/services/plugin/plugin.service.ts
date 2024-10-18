@@ -30,8 +30,8 @@ export class PluginService implements IPLuginService {
   }
 
   async remove(plugin: IPlugin): Promise<IPlugin> {
-    if (this.isPluginExists(plugin)) {
-      throw new Error(`Cannot add existing plugin ${plugin.metadata.name}`);
+    if (!this.isPluginExists(plugin)) {
+      throw new Error(`Plugin ${plugin.metadata.name} not found`);
     }
 
     this.pluginEvent.emitPluginRemove(PluginStatus.PEDDING);
@@ -55,18 +55,18 @@ export class PluginService implements IPLuginService {
     }
 
     const packageContents = await import(plugin.location?.path as string);
+
     plugin.instance = Object.create(
       packageContents.default.prototype,
     ) as Plugin;
+
     return plugin;
   }
 
   getAllAsMap(): Map<string, IPlugin> {
     const plugins: IPlugin[] = this.pluginRepository.loadPluginsData();
     const map = new Map();
-    plugins
-      .sort((p1, p2) => (p1.metadata.name < p2.metadata.name ? -1 : 1))
-      .forEach((p) => map.set(p.identifier?.id as string, p));
+    plugins.forEach((p) => map.set(p.identifier?.id as string, p));
     return map;
   }
 
@@ -76,13 +76,17 @@ export class PluginService implements IPLuginService {
       uuid: uuidv4(),
     };
 
-    const _plugin: IPlugin = {
-      identifier: plugin.identifier,
-      version: plugin.version,
-      location: plugin.location,
-      metadata: plugin.metadata,
-    };
+    // const _plugin: IPlugin = {
+    //   identifier: plugin.identifier,
+    //   version: plugin.version,
+    //   location: plugin.location,
+    //   metadata: plugin.metadata,
+    // };
     this.pluginRepository.save(plugin);
+  }
+
+  edit(plugin: IPlugin): void {
+    this.pluginRepository.edit(plugin);
   }
 
   private async downloadPlugin(plugin: IPlugin) {
@@ -119,5 +123,9 @@ export class PluginService implements IPLuginService {
     } catch (error) {
       return false;
     }
+  }
+
+  getAllAsList(): IPlugin[] {
+    return this.pluginRepository.loadPluginsData();
   }
 }
