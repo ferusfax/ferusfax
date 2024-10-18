@@ -33,6 +33,16 @@ export class PluginRepository implements IPluginRepository {
     this.saveAll(plugins);
   }
 
+  edit(plugin: IPlugin) {
+    const plugins: IPlugin[] = this.loadPluginsData();
+
+    const _plugins = plugins.map((p) =>
+      p.identifier?.uuid === plugin.identifier?.uuid ? plugin : p,
+    );
+
+    this.saveAll(_plugins);
+  }
+
   private saveAll(plugins: IPlugin[]) {
     fs.writeFileSync(this.getPluginFilePath(), JSON.stringify(plugins), 'utf8');
   }

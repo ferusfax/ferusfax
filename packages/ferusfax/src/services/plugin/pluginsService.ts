@@ -45,28 +45,9 @@ export class PluginService implements IPluginService {
     });
   }
 
-  private addPluginOptions(plugin: IPlugin, old?: IPlugin) {
+  private edit(plugin: IPlugin) {
     const config = this.configService.load() as IConfig;
-
-    if (old) {
-      const options: Option[] = config?.options.map((o) => {
-        return o.flags.trim() === old.metadata.flags.trim()
-          ? {
-              flags: plugin.metadata.flags,
-              description: plugin.metadata.description,
-            }
-          : o;
-      });
-      config?.options.splice(0, config?.options.length);
-      config?.options.push(...options);
-    } else {
-      config?.options.push({
-        flags: plugin.metadata.flags,
-        description: plugin.metadata.description,
-      });
-    }
-
-    this.configService.save(config as IConfig);
+    this.pluginManager.edit(plugin);
   }
 
   private async buildPluginInstallQuestions(): Promise<IPlugin> {
@@ -245,7 +226,7 @@ export class PluginService implements IPluginService {
 
       plugin.metadata.option = await this.extractOptionOfPlugin(plugin);
 
-      this.addPluginOptions(plugin, oldPlugin);
+      this.edit(plugin);
     });
   }
 

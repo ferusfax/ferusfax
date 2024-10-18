@@ -98,7 +98,7 @@ class FerusfaxController {
         const plugin = await this.pluginManager.loadPluginByOption(
           Object.keys(options)[0],
         );
-        plugin.instance.activate(
+        plugin.instance?.activate(
           options[plugin.metadata.option] == true
             ? undefined
             : options[plugin.metadata.option],

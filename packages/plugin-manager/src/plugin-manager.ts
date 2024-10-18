@@ -35,6 +35,7 @@ class PluginManager implements IPluginManager<IPlugin> {
       this.pluginEvent.emitPluginInstall(PluginStatus.RESOLVED);
     } catch (error: any) {
       this.pluginEvent.emitPluginInstall(PluginStatus.FAILED, error.message);
+      throw new Error(error.message);
     }
     return plugin;
   }
@@ -50,6 +51,10 @@ class PluginManager implements IPluginManager<IPlugin> {
     return plugin;
   }
 
+  edit(plugin: IPlugin): void {
+    this.pluginService.edit(plugin);
+  }
+
   onPluginInstall(listener = (data: PluginStatus) => {}) {
     this.pluginEvent.onPluginInstall(listener);
   }
@@ -63,7 +68,8 @@ class PluginManager implements IPluginManager<IPlugin> {
     if (!plugin) {
       throw new Error(`Cannot find plugin ${name}`);
     }
-    return Object.create(plugin?.instance.default.prototype) as P;
+    // return Object.create(plugin.instance.default.prototype) as P;
+    return {} as P;
   }
 
   /**

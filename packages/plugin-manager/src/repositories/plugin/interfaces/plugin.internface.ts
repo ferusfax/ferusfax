@@ -6,6 +6,7 @@ export interface IPluginRepository {
   getRootFolderPath(): string;
   createPluginFolder(): void;
   save(plugin: IPlugin): void;
+  edit(plugin: IPlugin): void;
   remove(plugin: IPlugin): IPlugin;
   readPluginPackageJson(plugin: IPlugin): Promise<IPlugin | undefined>;
   loadPluginsData(): IPlugin[];

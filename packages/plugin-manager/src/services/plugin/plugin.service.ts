@@ -55,9 +55,11 @@ export class PluginService implements IPLuginService {
     }
 
     const packageContents = await import(plugin.location?.path as string);
+
     plugin.instance = Object.create(
       packageContents.default.prototype,
     ) as Plugin;
+
     return plugin;
   }
 
@@ -74,13 +76,17 @@ export class PluginService implements IPLuginService {
       uuid: uuidv4(),
     };
 
-    const _plugin: IPlugin = {
-      identifier: plugin.identifier,
-      version: plugin.version,
-      location: plugin.location,
-      metadata: plugin.metadata,
-    };
+    // const _plugin: IPlugin = {
+    //   identifier: plugin.identifier,
+    //   version: plugin.version,
+    //   location: plugin.location,
+    //   metadata: plugin.metadata,
+    // };
     this.pluginRepository.save(plugin);
+  }
+
+  edit(plugin: IPlugin): void {
+    this.pluginRepository.edit(plugin);
   }
 
   private async downloadPlugin(plugin: IPlugin) {

@@ -10,6 +10,7 @@ export interface IPluginManager<T> {
   getPluginsAsMap(): Map<string, T>;
   getPluginsAslist(): T[];
   remove(plugin: T): Promise<T>;
+  edit(plugin: T): void;
   onPluginInstall(listener: any): void;
   onPluginRemove(listener: any): void;
   init(): void;
