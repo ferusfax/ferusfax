@@ -27,7 +27,21 @@ it will then perform the basic configurations and then show a help screen with t
 
 # Creating a plugin
 
-Create your project add the dependency
+Create your project and init your project
+
+```bash
+mkdir myplugin
+cd myplugin
+npm init -y
+```
+
+Install typescript
+
+```bash
+npm install --save-dev typescript
+```
+
+Create and configure the tsconfig.json file, add the dependency
 
 ```bash
 npm install -g @ferusfax/type
@@ -50,6 +64,8 @@ Once your plugin has been published in your repository, simply install it using 
 ```bash
 ferusfax -i
 ```
+
+Or can you install local project as well
 
 Follow the instructions and finally run ferusfax with the arguments given during installation
 
