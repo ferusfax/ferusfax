@@ -1,6 +1,6 @@
 import { IPluginManager } from '@ferusfax/plugin-manager';
 import { IConfig, IPlugin, PluginStatus } from '@ferusfax/types';
-import { input, select } from '@inquirer/prompts';
+import { input, select, confirm } from '@inquirer/prompts';
 import { Screen } from '@screen/screen';
 import { IConfigService, ConfigService } from '@services/config';
 import { Choice } from '../../controller/controller';
@@ -93,6 +93,10 @@ export class PluginService implements IPluginService {
           },
         }),
         option: '',
+        isLocal: await confirm({
+          message: 'Local Plugin?',
+          default: false,
+        }),
       },
     };
   }
@@ -295,6 +299,10 @@ export class PluginService implements IPluginService {
         },
       }),
       option: plugin.metadata.option,
+      isLocal: await confirm({
+        message: 'Local Plugin?',
+        default: false,
+      }),
     };
 
     return plugin;

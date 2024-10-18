@@ -22,6 +22,7 @@ export const pluginSchema = z.object({
     description: z.string(),
     option: z.string(),
     flags: z.string(),
+    isLocal: z.boolean().default(false),
   }),
   instance: z
     .object({

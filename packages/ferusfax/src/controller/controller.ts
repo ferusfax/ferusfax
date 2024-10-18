@@ -104,7 +104,7 @@ class FerusfaxController {
             : options[plugin.metadata.option],
         );
       } catch (error) {
-        this.screen.print(() => console.log('Plugin não encontrado ...'));
+        this.screen.print(() => console.log(error));
       }
     }
   }
