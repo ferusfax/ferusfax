@@ -30,7 +30,7 @@
     "TypeScript"
   ],
   "scripts": {
-    "install:dev": "npm install -g ",
+    "install:dev": "lerna run build && npm install -g ",
     "uninstall": "node dist/uninstall.js && npm uninstall -g @ferusfax/ferusfax",
     "build": "rimraf dist && tsc -p . && tsc-alias",
     "dev": "ts-node-dev -r tsconfig-paths/register src/core.ts",
