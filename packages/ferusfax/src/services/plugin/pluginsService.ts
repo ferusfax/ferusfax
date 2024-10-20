@@ -7,6 +7,8 @@ import { Choice } from '../../controller/controller';
 import { onPluginEvent, print } from '@screen/decorators';
 import { IPluginService } from '@services/plugin/interface/plugin.interface';
 import { Option } from '@ferusfax/types/dist/app.interface';
+import cluster from 'cluster';
+import { throws } from 'assert';
 const screen = new Screen();
 
 export class PluginService implements IPluginService {
@@ -306,5 +308,31 @@ export class PluginService implements IPluginService {
     };
 
     return plugin;
+  }
+
+  async runPlugin(options) {
+    if (cluster.isPrimary) {
+      cluster.fork();
+      cluster.on('exit', (worker, code, signal) => {
+        console.log(`worker ${worker.process.pid} died`);
+      });
+    } else {
+      await this.runPluginAsWorker(options);
+    }
+  }
+
+  private async runPluginAsWorker(options) {
+    try {
+      const plugin = await this.pluginManager.loadPluginByOption(
+        Object.keys(options)[0],
+      );
+      plugin.instance?.activate(
+        options[plugin.metadata.option] == true
+          ? undefined
+          : options[plugin.metadata.option],
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }
