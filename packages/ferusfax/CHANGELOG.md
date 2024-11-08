@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/ferusfax/ferusfax/compare/@ferusfax/ferusfax@0.3.0...@ferusfax/ferusfax@0.3.1) (2024-11-08)
+
+**Note:** Version bump only for package @ferusfax/ferusfax
+
 # [0.3.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/ferusfax@0.2.0...@ferusfax/ferusfax@0.3.0) (2024-11-08)
 
 ### Bug Fixes

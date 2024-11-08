@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/ferusfax/ferusfax/compare/@ferusfax/types@0.3.0...@ferusfax/types@0.3.1) (2024-11-08)
+
+### Bug Fixes
+
+- fix zod install ([4065ac9](https://github.com/ferusfax/ferusfax/commit/4065ac9628c93346c8fbe8bc451cf43ee2f1cf27))
+
 # [0.3.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/types@0.2.0...@ferusfax/types@0.3.0) (2024-11-08)
 
 ### Features
