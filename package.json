@@ -11,8 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@microsoft/tsdoc": "^0.15.0",
-    "@types/uuid": "^9.0.8",
-    "zod": "^3.23.8"
+    "@types/uuid": "^9.0.8"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
