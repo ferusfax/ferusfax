@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/types@0.2.0...@ferusfax/types@0.3.0) (2024-11-08)
+
+### Features
+
+- change plugin management ([d48f852](https://github.com/ferusfax/ferusfax/commit/d48f852f0487ef5903c6e115997900113a16c6c1))
+- install plugin created ([952a6c7](https://github.com/ferusfax/ferusfax/commit/952a6c73f7de3b78ddf5bd7ab87edce8892e2975))
+
 # [0.2.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/types@0.1.0...@ferusfax/types@0.2.0) (2024-05-04)
 
 ### Features

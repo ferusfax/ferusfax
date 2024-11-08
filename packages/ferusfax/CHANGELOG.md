@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/ferusfax@0.2.0...@ferusfax/ferusfax@0.3.0) (2024-11-08)
+
+### Bug Fixes
+
+- fix dev install ([dfc05b3](https://github.com/ferusfax/ferusfax/commit/dfc05b391e2a14ca3e37e46293793bf3a732126d))
+- remove code ([0261b8e](https://github.com/ferusfax/ferusfax/commit/0261b8e114e35f4ec706c5d4c63642b9914fb84a))
+- remove function ([4f07e3f](https://github.com/ferusfax/ferusfax/commit/4f07e3f1cb2e822e5767d3e27153b72c9760be36))
+
+### Features
+
+- change plugin management ([d48f852](https://github.com/ferusfax/ferusfax/commit/d48f852f0487ef5903c6e115997900113a16c6c1))
+- created default path to config ([7054727](https://github.com/ferusfax/ferusfax/commit/705472775db1316fd8eea94d2230e85cb6f3a0e7))
+- created new messagem to empty plugins ([782c966](https://github.com/ferusfax/ferusfax/commit/782c96620898bdaea43a195912ba280d288ba0ef))
+- install plugin created ([952a6c7](https://github.com/ferusfax/ferusfax/commit/952a6c73f7de3b78ddf5bd7ab87edce8892e2975))
+- load plugin options from plugin file ([837e9bd](https://github.com/ferusfax/ferusfax/commit/837e9bd2ad3ffd584f9a71d54792f45714bb7b6e))
+- run clugin as worker ([0e4f8e3](https://github.com/ferusfax/ferusfax/commit/0e4f8e3c933e9159f78b0a8113382dcff3fdaa65))
+
 # [0.2.0](https://github.com/ferusfax/ferusfax/compare/@ferusfax/ferusfax@0.1.0...@ferusfax/ferusfax@0.2.0) (2024-05-04)
 
 ### Bug Fixes
