@@ -20,7 +20,13 @@ export class PluginService implements IPLuginService {
     if (this.isPluginExists(plugin)) {
       throw new Error(`Cannot add existing plugin ${plugin.metadata.name}`);
     }
-    plugin = await this.downloadPlugin(plugin);
+
+    if (plugin.metadata.isLocal) {
+      plugin = await this.localPlugin(plugin);
+    } else {
+      plugin = await this.downloadPlugin(plugin);
+    }
+
     this.pluginEvent.emitPluginInstall(PluginStatus.CREATED);
     plugin = (await this.pluginRepository.readPluginPackageJson(
       plugin,
@@ -109,6 +115,26 @@ export class PluginService implements IPLuginService {
         plugin.metadata.packageName,
       ),
     };
+    return plugin;
+  }
+
+  private async localPlugin(plugin: IPlugin) {
+    // const child = spawn(
+    //   `npm v ${plugin.metadata.packageName} dist.tarball | xargs curl | tar -xz && mv package/ ${plugin.metadata.packageName}`,
+    //   {
+    //     shell: true,
+    //     cwd: this.pluginRepository.getPluginFolderPath(),
+    //   },
+    // );
+
+    // for await (const chunk of child.stdout) {
+    //   this.pluginEvent.emitPluginInstall(PluginStatus.PEDDING);
+    // }
+
+    plugin.location = {
+      path: path.join(plugin.metadata.packageName),
+    };
+
     return plugin;
   }
 

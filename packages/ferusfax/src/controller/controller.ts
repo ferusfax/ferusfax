@@ -5,7 +5,6 @@ import { Command } from 'commander';
 import { IPluginService, PluginService } from '@services/plugin/';
 import { Screen } from '@screen/screen';
 import { IConfigService, ConfigService } from '@services/config';
-import path from 'path';
 
 export interface Choice {
   name: string;
@@ -95,16 +94,9 @@ class FerusfaxController {
       this.pluginService.editPlugin();
     } else {
       try {
-        const plugin = await this.pluginManager.loadPluginByOption(
-          Object.keys(options)[0],
-        );
-        plugin.instance?.activate(
-          options[plugin.metadata.option] == true
-            ? undefined
-            : options[plugin.metadata.option],
-        );
+        this.pluginService.runPlugin(options);
       } catch (error) {
-        this.screen.print(() => console.log('Plugin não encontrado ...'));
+        this.screen.print(() => console.log(error));
       }
     }
   }

@@ -1,12 +1,14 @@
 import { IPluginManager } from '@ferusfax/plugin-manager';
 import { IConfig, IPlugin, PluginStatus } from '@ferusfax/types';
-import { input, select } from '@inquirer/prompts';
+import { input, select, confirm } from '@inquirer/prompts';
 import { Screen } from '@screen/screen';
 import { IConfigService, ConfigService } from '@services/config';
 import { Choice } from '../../controller/controller';
 import { onPluginEvent, print } from '@screen/decorators';
 import { IPluginService } from '@services/plugin/interface/plugin.interface';
 import { Option } from '@ferusfax/types/dist/app.interface';
+import cluster from 'cluster';
+import { throws } from 'assert';
 const screen = new Screen();
 
 export class PluginService implements IPluginService {
@@ -93,6 +95,10 @@ export class PluginService implements IPluginService {
           },
         }),
         option: '',
+        isLocal: await confirm({
+          message: 'Local Plugin?',
+          default: false,
+        }),
       },
     };
   }
@@ -295,8 +301,35 @@ export class PluginService implements IPluginService {
         },
       }),
       option: plugin.metadata.option,
+      isLocal: await confirm({
+        message: 'Local Plugin?',
+        default: false,
+      }),
     };
 
     return plugin;
+  }
+
+  async runPlugin(options) {
+    if (cluster.isPrimary) {
+      cluster.fork();
+    } else {
+      await this.runPluginAsWorker(options);
+    }
+  }
+
+  private async runPluginAsWorker(options) {
+    try {
+      const plugin = await this.pluginManager.loadPluginByOption(
+        Object.keys(options)[0],
+      );
+      plugin.instance?.activate(
+        options[plugin.metadata.option] == true
+          ? undefined
+          : options[plugin.metadata.option],
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }
