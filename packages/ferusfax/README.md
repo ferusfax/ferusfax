@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ferusfax/ferusfax/assets/8089374/1adec062-c72c-455c-9666-c408974af19d">
+    <img alt="ferusfax" src="https://github.com/ferusfax/ferusfax/assets/8089374/1adec062-c72c-455c-9666-c408974af19d" width="80">
+  </picture>
+</p>
+
 # Ferusfax
 
 Ferusfax is a command line interface that helps you with various activities in your daily life.
@@ -20,13 +27,27 @@ it will then perform the basic configurations and then show a help screen with t
 
 # Creating a plugin
 
-Create your project add the dependency
+Create your project and init your project
 
 ```bash
-npm install -g @ferusfax/type
+mkdir myplugin
+cd myplugin
+npm init -y
 ```
 
-Extends the abstract class Plugin and implient all methods
+Install typescript
+
+```bash
+npm install --save-dev typescript
+```
+
+Create and configure the tsconfig.json file, add the dependency
+
+```bash
+npm install --save @ferusfax/types
+```
+
+Extends the abstract class Plugin and implient all methods, make shure you export as default.
 
 ```typescript
 export default class MyPlugin extends Plugin {
@@ -44,7 +65,11 @@ Once your plugin has been published in your repository, simply install it using 
 ferusfax -i
 ```
 
+Or can you install local project as well
+
 Follow the instructions and finally run ferusfax with the arguments given during installation
+
+> For local plugins you must specify this option at installation time, in this case the package name must be the path to the project.
 
 If you have any questions, run the help command
 
