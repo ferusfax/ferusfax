@@ -52,6 +52,7 @@
     "install:dev": "lerna run install:dev",
     "uninstall": "lerna run uninstall",
     "build": "lerna run build",
+    "clean": "tsc -b --clean packages",
     "dev": "lerna run build && yarn workspace @ferusfax/ferusfax dev",
     "format": "lerna run format",
     "publish": "lerna run prerelease && lerna run build && lerna publish",
