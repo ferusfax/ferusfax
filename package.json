@@ -11,6 +11,8 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
     "@microsoft/tsdoc": "^0.15.0",
     "@types/uuid": "^9.0.8",
     "lint-staged": "^15.2.10"
