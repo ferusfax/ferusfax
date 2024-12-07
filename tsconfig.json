@@ -13,5 +13,8 @@
     "strict": true
     // "lib": ["es6"]
   },
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "paths": {
+    "@ferusfax/types": ["./pakages/types"]
+  }
 }
