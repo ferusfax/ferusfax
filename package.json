@@ -54,7 +54,7 @@
     "build": "lerna run build",
     "dev": "lerna run build && yarn workspace @ferusfax/ferusfax dev",
     "format": "lerna run format",
-    "publish": "lerna run build && lerna publish",
+    "publish": "lerna run prerelease && lerna run build && lerna publish",
     "test": "lerna run build && lerna run test",
     "lint": "npm run lint:packages",
     "lint:packages": "eslint 'packages/**/**.ts' --ignore-pattern 'packages/**/*.spec.ts'",
